@@ -6,7 +6,7 @@ const fs = require('fs');
 const homeFile = fs.readFileSync('home.html',"utf-8");
 
 const replaceVal =(tempVal, origVal)=>{
-        let temperature = tempVal.replace("{%tempval%}", origVal.main.temp);
+        let temperature = tempVal.replace('{%tempval%}', origVal.main.temp);
         temperature= temperature.replace("{%tempmin%}", origVal.main.temp_min);
         temperature= temperature.replace("{%tempmax%}", origVal.main.temp_max);
         temperature= temperature.replace("{%location%}", origVal.name);
@@ -23,11 +23,9 @@ const server = http.createServer((req, res)=>{
             let objData = JSON.parse(chunk);
             const arrData = [objData];
         //   console.log(arrData[0].main.temp);
-        const realTimeData = arrData.map((val)=>{
-            replaceVal(homeFile, val);
-        }).join("");
-            // res.write(realTimeData);
-            console.log(realTimeData);
+        const realTimeData = arrData.map(val => replaceVal(homeFile, val)).join("");
+        console.log(realTimeData);
+            res.write(realTimeData);
         })
         .on('end', (err)=> {
           if (err) return console.log('connection closed due to errors', err);
